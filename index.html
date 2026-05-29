@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>呼噜与可可的欢乐时光</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+:root {
+  --deep: #1a1035;
+  --purple: #4A3F6B;
+  --light-purple: #8B7BB5;
+  --cream: #FFF8F0;
+  --text: #3A2E4A;
+  --mid: #7B6B9B;
+  --yellow: #FFD080;
+  --orange: #FF8C42;
+  --pink: #FF6B8A;
+  --warm: #FFF0E0;
+}
+body {
+  font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  background: var(--cream);
+  min-height: 100vh;
+  color: var(--text);
+  overflow-x: hidden;
+}
+.page { display: none; min-height: 100vh; }
+.page.active { display: flex; flex-direction: column; }
+
+/* ===== 首页 ===== */
+#page-home { background: #fff; overflow-y: auto; }
+.home-hero {
+  position: relative; height: 70vh; min-height: 460px; max-height: 640px; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.hero-img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center;
+  opacity: 0;
+  transition: opacity 1.4s ease-in-out;
+}
+.hero-img.active { opacity: 1; }
+.hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg,
+    rgba(255,248,240,0) 35%,
+    rgba(255,244,232,0.55) 62%,
+    rgba(255,248,240,1) 100%);
+}
+.hero-text { position: relative; z-index: 2; padding: 0 24px 28px; text-align: center; }
+.hero-brand { font-size: 11px; color: var(--mid); margin-bottom: 6px; letter-spacing: 0.5px; }
+.hero-title {
+  font-size: 28px; font-weight: 800; color: var(--purple);
+  line-height: 1.28; margin-bottom: 6px;
+  text-shadow: 0 2px 18px rgba(255,255,255,0.6);
+}
+.hero-subtitle { font-size: 13px; color: var(--mid); margin-bottom: 16px; line-height: 1.6; }
+.scroll-hint {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  color: var(--light-purple); font-size: 12px;
+  animation: bounce 2s ease-in-out infinite;
+}
+@keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+.char-showcase {
+  background: linear-gradient(180deg, #F7EFFF 0%, #F2E6FF 100%);
+  padding: 44px 0 40px; overflow: hidden;
+}
+.showcase-head { text-align: center; padding: 0 24px; margin-bottom: 28px; }
+.showcase-tag {
+  display: inline-block;
+  background: linear-gradient(135deg, #8B7BB5, #6B5D9A);
+  color: white; font-size: 11px; font-weight: 700;
+  border-radius: 20px; padding: 4px 14px; margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+.showcase-title { font-size: 21px; font-weight: 800; color: var(--purple); margin-bottom: 8px; }
+.showcase-sub { font-size: 13px; color: var(--mid); line-height: 1.6; }
+
+.marquee {
+  position: relative; width: 100%; overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+.marquee-track {
+  display: flex; gap: 18px; width: max-content;
+  padding: 6px 0;
+  animation: scroll-left 48s linear infinite;
+}
+.marquee.row2 .marquee-track { animation: scroll-right 54s linear infinite; }
+@keyframes scroll-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes scroll-right { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+.char-avatar { flex-shrink: 0; width: 92px; text-align: center; cursor: pointer; }
+.char-avatar-img {
+  width: 88px; height: 88px; border-radius: 50%;
+  object-fit: contain; object-position: center;
+  background: #fff; border: 3px solid #fff;
+  box-shadow: 0 6px 18px rgba(120,90,160,0.18);
+  transition: transform 0.2s;
+}
+.char-avatar:active .char-avatar-img { transform: scale(0.93); }
+.char-avatar-name { font-size: 12px; color: var(--purple); font-weight: 600; margin-top: 8px; }
+
+.showcase-allbtn {
+  display: block; margin: 32px auto 0;
+  background: #fff; border: 1.5px solid #E0D4F5;
+  border-radius: 50px; padding: 11px 28px;
+  font-size: 14px; color: var(--purple); font-weight: 600;
+  cursor: pointer; box-shadow: 0 4px 14px rgba(120,90,160,0.1);
+}
+
+.home-city {
+  background: linear-gradient(180deg, #FFF8F0 0%, #F7EFFF 100%);
+  padding: 40px 24px 36px;
+  display: flex; flex-direction: column; align-items: center;
+}
+.city-card { width: 100%; max-width: 400px; }
+.city-img {
+  width: 100%; border-radius: 22px; margin-bottom: 20px;
+  box-shadow: 0 10px 32px rgba(74,63,107,0.2); display: block;
+}
+.city-tag {
+  display: inline-block;
+  background: linear-gradient(135deg, #6B5D9A, #4A3F6B);
+  color: white; font-size: 11px; font-weight: 700;
+  border-radius: 20px; padding: 4px 14px; margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+.city-title { font-size: 21px; font-weight: 800; color: var(--purple); margin-bottom: 14px; line-height: 1.4; }
+.city-desc { font-size: 14.5px; color: var(--mid); line-height: 1.95; }
+.city-desc strong { color: var(--purple); font-weight: 700; }
+
+.home-start {
+  background: linear-gradient(180deg, #F2E6FF 0%, #F7EFFF 100%);
+  padding: 36px 24px 56px;
+  display: flex; flex-direction: column; align-items: center;
+}
+.divider {
+  width: 100%; max-width: 400px; height: 1px;
+  background: linear-gradient(90deg, transparent, #D0C4E8, transparent);
+  margin-bottom: 32px;
+}
+.start-section { width: 100%; max-width: 400px; text-align: center; }
+.start-title { font-size: 18px; font-weight: 800; color: var(--purple); margin-bottom: 8px; }
+.start-sub { font-size: 13px; color: var(--mid); margin-bottom: 26px; line-height: 1.7; }
+.start-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--orange), var(--pink));
+  color: white; border: none; border-radius: 50px;
+  padding: 18px; font-size: 17px; font-weight: 700;
+  cursor: pointer; box-shadow: 0 8px 24px rgba(255,107,138,0.4);
+  transition: transform 0.15s;
+}
+.start-btn:active { transform: scale(0.97); }
+.home-history-entry {
+  margin-top: 20px; font-size: 13px; color: var(--light-purple);
+  cursor: pointer; text-decoration: underline; text-underline-offset: 3px;
+}
+
+#char-modal {
+  display: none; position: fixed; inset: 0;
+  background: rgba(26,16,53,0.5); z-index: 200;
+  align-items: flex-end; justify-content: center;
+  backdrop-filter: blur(2px);
+}
+#char-modal.active { display: flex; }
+.char-sheet {
+  background: linear-gradient(180deg, #fff 0%, #FFF8F0 100%);
+  border-radius: 28px 28px 0 0;
+  padding: 12px 24px 40px;
+  width: 100%; max-width: 480px;
+  text-align: center;
+  animation: sheet-up 0.3s ease;
+}
+@keyframes sheet-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.char-sheet-handle {
+  width: 40px; height: 4px; background: #E0D4F0;
+  border-radius: 4px; margin: 0 auto 18px;
+}
+.char-sheet-img {
+  width: 160px; height: 160px; border-radius: 50%;
+  object-fit: contain; object-position: center;
+  border: 4px solid #fff;
+  box-shadow: 0 10px 30px rgba(120,90,160,0.25);
+  margin-bottom: 16px; background: #fff;
+}
+.char-sheet-name { font-size: 22px; font-weight: 800; color: var(--purple); margin-bottom: 4px; }
+.char-sheet-role {
+  display: inline-block; background: #F0E8FA; color: #6B5D9A;
+  font-size: 12px; font-weight: 600;
+  border-radius: 20px; padding: 4px 14px; margin-bottom: 16px;
+}
+.char-sheet-desc {
+  font-size: 15.5px; color: var(--text); line-height: 1.85;
+  max-width: 320px; margin: 0 auto;
+}
+
+#page-gallery { background: linear-gradient(180deg, #FFF8F0, #F7EFFF); overflow-y: auto; }
+.gallery-header {
+  position: sticky; top: 0; z-index: 10;
+  background: rgba(255,248,240,0.92);
+  backdrop-filter: blur(8px);
+  padding: 16px 20px;
+  display: flex; align-items: center; gap: 12px;
+  border-bottom: 1px solid #EEE4F8;
+}
+.back-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: #fff; border: 1px solid #E8DCF5;
+  font-size: 18px; color: var(--purple); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.gallery-header-title { font-size: 17px; font-weight: 700; color: var(--purple); }
+.gallery-group-label {
+  font-size: 13px; font-weight: 700; color: var(--light-purple);
+  padding: 24px 22px 6px; letter-spacing: 0.5px;
+}
+.gallery-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 14px; padding: 8px 16px;
+}
+.gallery-card {
+  background: #fff; border-radius: 18px;
+  padding: 16px 12px 14px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(120,90,160,0.1);
+  cursor: pointer; transition: transform 0.15s;
+}
+.gallery-card:active { transform: scale(0.96); }
+.gallery-card-img {
+  width: 88px; height: 88px; border-radius: 50%;
+  object-fit: contain; object-position: center;
+  background: #FBF7FF; margin-bottom: 10px;
+}
+.gallery-card-name { font-size: 14px; font-weight: 700; color: var(--purple); margin-bottom: 3px; }
+.gallery-card-role { font-size: 11px; color: var(--mid); margin-bottom: 8px; }
+.gallery-card-desc { font-size: 11.5px; color: var(--mid); line-height: 1.6; text-align: left; }
+.gallery-bottom { height: 40px; }
+
+#page-story { background: #FBF6EF; overflow-y: auto; }
+.story-header {
+  position: sticky; top: 0; z-index: 10;
+  background: linear-gradient(135deg, #1a1035, #2d1b5e, #4a2c7a);
+  padding: 16px 18px;
+  display: flex; align-items: center; gap: 12px;
+}
+.story-header .back-btn {
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.22);
+  color: #fff;
+}
+.story-header-info { flex: 1; min-width: 0; }
+.story-header-title {
+  font-size: 15px; font-weight: 700; color: white;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.story-header-sub { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+.story-new-btn {
+  background: rgba(255,255,255,0.14); color: rgba(255,255,255,0.9);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 20px; padding: 7px 14px;
+  font-size: 12px; cursor: pointer; white-space: nowrap;
+}
+
+.keyword-section { padding: 28px 22px 24px; }
+.kw-label { font-size: 17px; font-weight: 800; color: var(--purple); margin-bottom: 6px; }
+.kw-sublabel { font-size: 13px; color: var(--mid); margin-bottom: 18px; line-height: 1.6; }
+.kw-input {
+  width: 100%; background: #fff;
+  border: 1.5px solid #E8DCF5; border-radius: 16px;
+  padding: 14px 16px; font-size: 15px;
+  color: var(--text); outline: none;
+  font-family: inherit; margin-bottom: 12px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.kw-input:focus {
+  border-color: var(--light-purple);
+  box-shadow: 0 0 0 3px rgba(139,123,181,0.12);
+}
+.kw-input::placeholder { color: #C0B0D4; font-size: 13.5px; }
+.kw-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.kw-chip {
+  background: #fff; border: 1.5px solid #EADFF7;
+  border-radius: 18px; padding: 6px 14px;
+  font-size: 13px; color: var(--mid); cursor: pointer;
+}
+.kw-chip:active { background: #F5EEFE; }
+
+.gen-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--orange), var(--pink));
+  color: white; border: none; border-radius: 50px;
+  padding: 16px; font-size: 16px; font-weight: 700;
+  cursor: pointer; box-shadow: 0 6px 20px rgba(255,107,138,0.35);
+  transition: transform 0.15s, opacity 0.15s;
+}
+.gen-btn:active { transform: scale(0.97); }
+.gen-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.usage-note {
+  text-align: center; font-size: 12px;
+  color: var(--light-purple); margin-top: 14px; line-height: 1.6;
+}
+
+.story-body { padding: 8px 0 40px; flex: 1; }
+
+.loading-state {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 60px 24px; text-align: center;
+}
+.loading-img {
+  width: 180px; border-radius: 20px;
+  margin-bottom: 22px;
+  box-shadow: 0 10px 30px rgba(74,63,107,0.18);
+  opacity: 0.95;
+}
+.loading-text { font-size: 16px; font-weight: 700; color: var(--purple); margin-bottom: 8px; }
+.loading-sub { font-size: 13px; color: var(--mid); line-height: 1.6; }
+.loading-dots::after { content: ''; animation: dots 1.4s steps(4,end) infinite; }
+@keyframes dots {
+  0% { content: ''; } 25% { content: '·'; }
+  50% { content: '··'; } 75% { content: '···'; }
+}
+
+.story-scroll { padding: 16px 18px; }
+.story-cover {
+  background: linear-gradient(135deg, #FFE8D0, #FFD8E5);
+  border-radius: 22px; padding: 28px 24px;
+  text-align: center; margin-bottom: 20px;
+  box-shadow: 0 8px 24px rgba(255,150,130,0.18);
+}
+.story-cover-label { font-size: 12px; color: #C2674A; letter-spacing: 1px; margin-bottom: 8px; }
+.story-cover-title { font-size: 24px; font-weight: 800; color: #8A3A2E; line-height: 1.4; }
+.story-cover-kw {
+  display: inline-block; margin-top: 12px;
+  background: rgba(255,255,255,0.6); color: #A04A38;
+  font-size: 12px; border-radius: 16px; padding: 4px 14px;
+}
+
+.script-block {
+  margin-bottom: 18px; opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+.script-block.show { opacity: 1; transform: none; }
+
+.story-para {
+  font-size: 17.5px; line-height: 2.05;
+  color: var(--text);
+  background: #fff; border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 3px 12px rgba(120,90,160,0.07);
+}
+
+.block-question, .block-action, .block-predict {
+  border-radius: 16px; padding: 16px 18px;
+}
+.block-question { background: #FFFBEE; border: 1.5px solid #FFE9A8; }
+.block-action { background: #EEF8FF; border: 1.5px solid #BFE4F7; }
+.block-predict { background: #F5F0FF; border: 1.5px solid #DCCCF2; }
+.block-tag {
+  font-size: 11px; font-weight: 800; letter-spacing: 0.5px;
+  margin-bottom: 7px; display: flex; align-items: center; gap: 5px;
+}
+.block-question .block-tag { color: #B8860B; }
+.block-action .block-tag { color: #1565C0; }
+.block-predict .block-tag { color: #6B3FA0; }
+.block-text { font-size: 16px; font-weight: 600; line-height: 1.75; }
+.block-question .block-text { color: #5A3A00; }
+.block-action .block-text { color: #0D3B6E; }
+.block-predict .block-text { color: #3A2070; }
+
+.story-actions {
+  display: flex; gap: 12px;
+  padding: 8px 18px 0;
+  opacity: 0; transition: opacity 0.5s;
+}
+.story-actions.show { opacity: 1; }
+.action-btn {
+  flex: 1; border-radius: 50px;
+  padding: 14px; font-size: 14.5px; font-weight: 700;
+  cursor: pointer; border: none;
+}
+.action-share {
+  background: linear-gradient(135deg, var(--orange), var(--pink));
+  color: #fff; box-shadow: 0 6px 18px rgba(255,107,138,0.3);
+}
+.action-again {
+  background: #fff; color: var(--purple);
+  border: 1.5px solid #E0D4F5;
+}
+
+.error-state { text-align: center; padding: 50px 24px; }
+.error-icon { font-size: 44px; margin-bottom: 14px; display: block; }
+.error-msg { font-size: 15px; color: var(--mid); margin-bottom: 22px; line-height: 1.7; }
+.retry-btn {
+  background: #fff; border: 1.5px solid #D0C0E8;
+  border-radius: 24px; padding: 11px 30px;
+  font-size: 14px; color: var(--purple); cursor: pointer;
+}
+
+#page-history { background: linear-gradient(180deg, #FFF8F0, #F7EFFF); overflow-y: auto; }
+.history-list { padding: 16px; }
+.history-note {
+  background: #FFF6E8; border: 1px solid #FFE4BF;
+  border-radius: 14px; padding: 12px 16px;
+  font-size: 12.5px; color: #A86B2E;
+  line-height: 1.7; margin-bottom: 18px;
+}
+.history-item {
+  background: #fff; border-radius: 16px;
+  padding: 16px 18px; margin-bottom: 12px;
+  box-shadow: 0 3px 12px rgba(120,90,160,0.08);
+  cursor: pointer;
+}
+.history-item-title { font-size: 16px; font-weight: 700; color: var(--purple); margin-bottom: 5px; }
+.history-item-meta { font-size: 12px; color: var(--mid); }
+.history-empty {
+  text-align: center; padding: 60px 24px;
+  color: var(--mid); font-size: 14px; line-height: 1.8;
+}
+
+#share-modal {
+  display: none; position: fixed; inset: 0;
+  background: rgba(26,16,53,0.7); z-index: 300;
+  overflow-y: auto; padding: 30px 16px;
+}
+#share-modal.active { display: block; }
+.share-close {
+  position: sticky; top: 0; margin-left: auto;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255,255,255,0.2); color: #fff;
+  border: none; font-size: 20px; cursor: pointer;
+  display: block;
+}
+.share-preview {
+  max-width: 380px; margin: 10px auto;
+  border-radius: 16px; overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+}
+.share-preview img { width: 100%; display: block; }
+.share-tip {
+  text-align: center; color: rgba(255,255,255,0.85);
+  font-size: 13px; margin: 16px auto;
+  max-width: 360px; line-height: 1.7;
+}
+.share-save-btn {
+  display: block; margin: 0 auto;
+  max-width: 360px; width: 100%;
+  background: linear-gradient(135deg, var(--orange), var(--pink));
+  color: #fff; border: none; border-radius: 50px;
+  padding: 15px; font-size: 16px; font-weight: 700;
+  cursor: pointer;
+}
+
+#share-canvas-tpl {
+  position: fixed; left: -9999px; top: 0;
+  width: 600px;
+  background: linear-gradient(180deg, #FFF4E6 0%, #F5EBFF 100%);
+  padding: 0;
+}
+.tpl-hero { position: relative; padding: 44px 44px 36px; text-align: center; }
+.tpl-brand { font-size: 18px; color: #9A8AB8; margin-bottom: 14px; }
+.tpl-title {
+  font-size: 46px; font-weight: 800;
+  color: #8A3A2E; line-height: 1.35; margin-bottom: 16px;
+}
+.tpl-kw {
+  display: inline-block; background: #FFE0CC; color: #A04A38;
+  font-size: 20px; border-radius: 30px; padding: 8px 24px;
+}
+.tpl-body { padding: 0 44px 30px; }
+.tpl-para { font-size: 27px; line-height: 2; color: #3A2E4A; margin-bottom: 24px; }
+.tpl-inter {
+  border-radius: 20px; padding: 22px 26px; margin-bottom: 24px;
+  font-size: 25px; line-height: 1.7; font-weight: 600;
+}
+.tpl-inter.q { background: #FFFBEE; border-left: 8px solid #FFD060; color: #5A3A00; }
+.tpl-inter.a { background: #EEF8FF; border-left: 8px solid #7EC8F0; color: #0D3B6E; }
+.tpl-inter.p { background: #F5F0FF; border-left: 8px solid #B39DDB; color: #3A2070; }
+.tpl-inter-tag { font-size: 19px; font-weight: 800; margin-bottom: 8px; opacity: 0.7; }
+.tpl-footer {
+  background: linear-gradient(135deg, #4A3F6B, #2d1b5e);
+  padding: 40px 44px;
+  display: flex; align-items: center; gap: 28px;
+}
+.tpl-footer-text { flex: 1; color: #fff; }
+.tpl-footer-title { font-size: 30px; font-weight: 800; margin-bottom: 10px; }
+.tpl-footer-sub { font-size: 20px; color: rgba(255,255,255,0.75); line-height: 1.6; }
+.tpl-qr {
+  width: 150px; height: 150px;
+  background: #fff; border-radius: 16px; padding: 12px;
+  flex-shrink: 0;
+}
+.tpl-qr img, .tpl-qr canvas { width: 100% !important; height: 100% !important; }
+
+.toast {
+  position: fixed; bottom: 40px; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(40,30,70,0.94); color: white;
+  padding: 11px 24px; border-radius: 24px;
+  font-size: 14px; z-index: 400;
+  max-width: 80%; text-align: center;
+  pointer-events: none; opacity: 0;
+  transition: opacity 0.3s;
+}
+.toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<script>
+const IMG_HERO   = ['hero/hero-1.jpg', 'hero/hero-2.jpg', 'hero/hero-3.jpg'];
+const IMG_NIGHT  = '%E5%91%BC%E5%99%9C%E5%8F%AF%E5%8F%AF%E5%A4%A7%E6%B5%B7%E6%8A%A5.png';
+const IMG_WAITING = 'hero/waiting.jpg';
+const SITE_URL   = 'https://shixiaopo.github.io/hulukeke/';
+</script>
+
+<div class="toast" id="toast"></div>
+
+<div class="page active" id="page-home">
+  <div class="home-hero">
+    <img class="hero-img" id="img-hero-1" src="" alt="呼噜与可可">
+    <img class="hero-img" id="img-hero-2" src="" alt="呼噜与可可">
+    <img class="hero-img" id="img-hero-3" src="" alt="呼噜与可可">
+    <div class="hero-overlay"></div>
+    <div class="hero-text">
+      <div class="hero-brand">帆书APP · 波波龟工作室出品</div>
+      <div class="hero-title">呼噜与可可的<br>欢乐时光</div>
+      <div class="hero-subtitle">家长陪读故事脚本生成器</div>
+      <div class="scroll-hint">
+        <span>了解这个故事世界</span>
+        <span>↓</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="home-city">
+    <div class="city-card">
+      <img class="city-img" id="img-city" src="" alt="波波动物城的夜晚">
+      <div class="city-tag">✦ 波波动物城</div>
+      <div class="city-title">一座充满故事的动物城市</div>
+      <div class="city-desc">
+        在波波动物城里，动物们和我们一样生活——有学校、书店、医院，还有温暖的家。<br><br>
+        <strong>呼噜和可可</strong>就住在这里。哥哥呼噜六岁，鲁莽又护妹妹；妹妹可可四岁，甜酷有主意。他们每天都在这座城市里，发生着许许多多<strong>有趣又奇妙的故事</strong>。
+      </div>
+    </div>
+  </div>
+
+  <div class="char-showcase">
+    <div class="showcase-head">
+      <div class="showcase-tag">✦ 故事里的朋友们</div>
+      <div class="showcase-title">认识波波动物城的伙伴</div>
+      <div class="showcase-sub">点一点头像，看看他们是谁</div>
+    </div>
+    <div class="marquee row1"><div class="marquee-track" id="track1"></div></div>
+    <div class="marquee row2" style="margin-top:18px"><div class="marquee-track" id="track2"></div></div>
+    <button class="showcase-allbtn" onclick="showPage('page-gallery')">看看全部朋友 →</button>
+  </div>
+
+  <div class="home-start">
+    <div class="divider"></div>
+    <div class="start-section">
+      <div class="start-title">今晚，你想听什么故事？</div>
+      <div class="start-sub">让孩子说说今晚想听什么<br>AI马上为你们生成专属故事脚本</div>
+      <button class="start-btn" onclick="goToStory()">开始今晚的故事 ✨</button>
+      <div class="home-history-entry" onclick="showHistory()">📖 看看以前生成的故事</div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-gallery">
+  <div class="gallery-header">
+    <button class="back-btn" onclick="showPage('page-home')">←</button>
+    <div class="gallery-header-title">波波动物城的朋友们</div>
+  </div>
+  <div id="gallery-content"></div>
+  <div class="gallery-bottom"></div>
+</div>
+
+<div class="page" id="page-story">
+  <div class="story-header">
+    <button class="back-btn" onclick="showPage('page-home')">←</button>
+    <div class="story-header-info">
+      <div class="story-header-title" id="story-title">今晚的故事</div>
+      <div class="story-header-sub">家长朗读脚本 · 波波动物城</div>
+    </div>
+    <button class="story-new-btn" onclick="resetStory()">换一个 ↩</button>
+  </div>
+  <div class="keyword-section" id="kw-section">
+    <div class="kw-label">今晚，你想听什么故事？</div>
+    <div class="kw-sublabel">让孩子说一个词，故事就从这里长出来</div>
+    <input class="kw-input" id="kw1" type="text" placeholder="比如：下雨天、冰激凌、打针、星星……" maxlength="20">
+    <div class="kw-chips" id="kw-chips"></div>
+    <button class="gen-btn" id="gen-btn" onclick="generateStory()">生成今晚的故事脚本 ✨</button>
+    <div class="usage-note" id="usage-note"></div>
+  </div>
+  <div class="story-body" id="story-body"></div>
+</div>
+
+<div class="page" id="page-history">
+  <div class="gallery-header">
+    <button class="back-btn" onclick="showPage('page-home')">←</button>
+    <div class="gallery-header-title">以前的故事</div>
+  </div>
+  <div class="history-list" id="history-content"></div>
+</div>
+
+<div id="char-modal" onclick="closeCharModal(event)">
+  <div class="char-sheet" onclick="event.stopPropagation()">
+    <div class="char-sheet-handle"></div>
+    <img class="char-sheet-img" id="cs-img" src="" alt="">
+    <div class="char-sheet-name" id="cs-name"></div>
+    <div class="char-sheet-role" id="cs-role"></div>
+    <div class="char-sheet-desc" id="cs-desc"></div>
+  </div>
+</div>
+
+<div id="share-modal">
+  <button class="share-close" onclick="closeShare()">×</button>
+  <div class="share-preview" id="share-preview"></div>
+  <div class="share-tip">长按上方图片即可保存到相册<br>分享给更多家长，一起听故事 🌙</div>
+  <button class="share-save-btn" onclick="closeShare()">完成</button>
+</div>
+
+<div id="share-canvas-tpl"></div>
+
+<script>
+const CHARACTERS = [
+  { name:'爸爸', file:'爸爸.png', role:'奶牛猫', group:'核心家庭', desc:'家里最大的"大孩子"，陪玩起来比孩子还嗨' },
+  { name:'妈妈', file:'妈妈.png', role:'三花猫', group:'核心家庭', desc:'干练的职业女性，一回家就成了孩子最温柔的陪伴' },
+  { name:'呼噜', file:'呼噜.png', role:'哥哥 · 6岁', group:'核心家庭', desc:'鲁莽率真护妹妹，虽然偶尔、偶尔也会被妹妹气到炸毛' },
+  { name:'可可', file:'可可.png', role:'妹妹 · 4岁', group:'核心家庭', desc:'甜酷萌妹，关键时刻总能蹦出让大人愣住的话' },
+  { name:'跳跳', file:'跳跳.png', role:'小袋鼠', group:'玩伴', desc:'永远在蹦，排队也蹦，吃饭也蹦' },
+  { name:'团团', file:'团团.png', role:'小刺猬', group:'玩伴', desc:'一害羞就缩成球，但很快又自己打开' },
+  { name:'亮亮', file:'亮亮.png', role:'小萤火虫', group:'玩伴', desc:'晚上屁股会发光，是大家的"小夜灯"' },
+  { name:'飞飞', file:'飞飞.png', role:'小蝙蝠', group:'玩伴', desc:'爱倒挂在各种地方，觉得超好玩' },
+  { name:'落落', file:'落落.png', role:'小蜗牛', group:'玩伴', desc:'动作很慢，但每次最后一名也很开心' },
+  { name:'豆豆', file:'豆豆.png', role:'小仓鼠', group:'玩伴', desc:'嘴硬胆小，总说"我才不怕"然后躲到可可背后' },
+  { name:'阿橙', file:'阿橙.png', role:'橘猫', group:'玩伴', desc:'圆滚滚乐天派，聊什么都能绕回"好好吃哦"' },
+  { name:'米卡', file:'米卡.png', role:'小兔子', group:'玩伴', desc:'一百个主意，九个出问题，剩一个是天才' },
+  { name:'卡皮巴拉一家', file:'卡皮巴拉家.png', role:'邻居', group:'玩伴', desc:'胖乎乎超淡定的邻居，最小那只总抱着一个小果子' },
+  { name:'熊猫先生', file:'熊猫先生.png', role:'书店老板', group:'城市大人', desc:'知道所有答案，但回答你总是再问你一个问题' },
+  { name:'老虎先生', file:'老虎先生.png', role:'警察', group:'城市大人', desc:'高大威严脸上一颗痣，其实非常怕虫子' },
+  { name:'仓鼠爷爷', file:'仓鼠爷爷.png', role:'医生', group:'城市大人', desc:'小白大褂老花镜，得坐高凳子才能跟病人平视' },
+  { name:'狐狸小姐', file:'狐狸小姐.png', role:'售货员', group:'城市大人', desc:'笑眯眯戴手套，公认城里最漂亮的人' },
+  { name:'大象奶奶', file:'大象奶奶.png', role:'公交司机', group:'城市大人', desc:'开车超慢从不急，座位底下永远藏着饼干' },
+  { name:'长颈鹿小姐', file:'长颈鹿小姐.png', role:'幼儿园老师', group:'城市大人', desc:'低头跟小朋友说话，时不时撞到吊灯' },
+  { name:'企鹅先生', file:'企鹅先生.png', role:'冰激凌店老板', group:'城市大人', desc:'总戴围巾，做的冰激凌不会化太快' },
+  { name:'猫头鹰教授', file:'猫头鹰教授.png', role:'天文台台长', group:'城市大人', desc:'白天打瞌睡，讲星星讲到一半可能睡着' },
+];
+
+function charImgUrl(file) { return '角色单图/圆形/' + encodeURIComponent(file); }
+
+// hero 轮播:3 张图按顺序渐隐切换
+const heroImgs = [
+  document.getElementById('img-hero-1'),
+  document.getElementById('img-hero-2'),
+  document.getElementById('img-hero-3'),
+];
+heroImgs.forEach((el, i) => { el.src = IMG_HERO[i]; });
+heroImgs[0].classList.add('active');
+let heroIdx = 0;
+setInterval(() => {
+  heroImgs[heroIdx].classList.remove('active');
+  heroIdx = (heroIdx + 1) % heroImgs.length;
+  heroImgs[heroIdx].classList.add('active');
+}, 1300);
+
+document.getElementById('img-city').src = IMG_NIGHT;
+
+function buildMarquee() {
+  const half = Math.ceil(CHARACTERS.length / 2);
+  const row1 = CHARACTERS.slice(0, half);
+  const row2 = CHARACTERS.slice(half);
+  fillTrack('track1', row1);
+  fillTrack('track2', row2);
+}
+function fillTrack(id, list) {
+  const track = document.getElementById(id);
+  const items = [...list, ...list];
+  track.innerHTML = items.map(c => `
+    <div class="char-avatar" onclick="openCharModal('${c.name}')">
+      <img class="char-avatar-img" src="${charImgUrl(c.file)}" alt="${c.name}" loading="lazy">
+      <div class="char-avatar-name">${c.name}</div>
+    </div>`).join('');
+}
+
+function openCharModal(name) {
+  const c = CHARACTERS.find(x => x.name === name);
+  if (!c) return;
+  document.getElementById('cs-img').src = charImgUrl(c.file);
+  document.getElementById('cs-name').textContent = c.name;
+  document.getElementById('cs-role').textContent = c.role;
+  document.getElementById('cs-desc').textContent = c.desc;
+  document.getElementById('char-modal').classList.add('active');
+}
+function closeCharModal(e) {
+  document.getElementById('char-modal').classList.remove('active');
+}
+
+function buildGallery() {
+  const groups = ['核心家庭', '玩伴', '城市大人'];
+  let html = '';
+  groups.forEach(g => {
+    html += `<div class="gallery-group-label">${g}</div><div class="gallery-grid">`;
+    CHARACTERS.filter(c => c.group === g).forEach(c => {
+      html += `
+        <div class="gallery-card" onclick="openCharModal('${c.name}')">
+          <img class="gallery-card-img" src="${charImgUrl(c.file)}" alt="${c.name}" loading="lazy">
+          <div class="gallery-card-name">${c.name}</div>
+          <div class="gallery-card-role">${c.role}</div>
+          <div class="gallery-card-desc">${c.desc}</div>
+        </div>`;
+    });
+    html += `</div>`;
+  });
+  document.getElementById('gallery-content').innerHTML = html;
+}
+
+buildMarquee();
+buildGallery();
+
+const API_BASE = 'https://1394935304-m3dme7xbhy.ap-beijing.tencentscf.com';
+const DAILY_LIMIT = 5;
+const DEVICE_CODE = 'BOBA-2025-A1';
+
+function getUsageKey() {
+  const today = new Date().toISOString().slice(0, 10);
+  return `keke_usage_${today}`;
+}
+function getRemaining() {
+  const count = parseInt(localStorage.getItem(getUsageKey()) || '0');
+  return Math.max(0, DAILY_LIMIT - count);
+}
+function checkAndIncrementUsage() {
+  const key = getUsageKey();
+  const count = parseInt(localStorage.getItem(key) || '0');
+  if (count >= DAILY_LIMIT) return false;
+  localStorage.setItem(key, count + 1);
+  return true;
+}
+function refundUsage() {
+  const key = getUsageKey();
+  const count = parseInt(localStorage.getItem(key) || '1');
+  localStorage.setItem(key, Math.max(0, count - 1));
+}
+function updateUsageNote() {
+  const r = getRemaining();
+  document.getElementById('usage-note').textContent =
+    r > 0 ? `今天还能生成 ${r} 个故事` : '今天的故事次数用完啦，明天再来吧 🌙';
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function goToStory() {
+  showPage('page-story');
+  document.getElementById('story-body').innerHTML = '';
+  document.getElementById('kw-section').style.display = 'block';
+  document.getElementById('story-title').textContent = '今晚的故事';
+  buildKwChips();
+  updateUsageNote();
+}
+
+function resetStory() {
+  document.getElementById('kw1').value = '';
+  document.getElementById('story-body').innerHTML = '';
+  document.getElementById('kw-section').style.display = 'block';
+  document.getElementById('story-title').textContent = '今晚的故事';
+  updateUsageNote();
+  window.scrollTo(0, 0);
+}
+
+const KW_SUGGEST = ['下雨天','冰激凌','打针','星星','新朋友','搭积木','迷路了','分享','睡不着','气球'];
+function buildKwChips() {
+  const pick = [...KW_SUGGEST].sort(() => Math.random() - 0.5).slice(0, 5);
+  document.getElementById('kw-chips').innerHTML = pick.map(k =>
+    `<div class="kw-chip" onclick="document.getElementById('kw1').value='${k}'">${k}</div>`).join('');
+}
+</script>
+
+<script>
+let lastStory = null;
+
+async function generateStory() {
+  const kw1 = document.getElementById('kw1').value.trim();
+  const keywords = [kw1].filter(Boolean);
+  if (keywords.length === 0) { toast('说个关键词吧，比如：下雨天 😊'); return; }
+  if (getRemaining() <= 0) {
+    toast('今天的故事次数用完了，明天再来吧 🌙');
+    return;
+  }
+  checkAndIncrementUsage();
+
+  const btn = document.getElementById('gen-btn');
+  btn.disabled = true;
+
+  document.getElementById('kw-section').style.display = 'none';
+  document.getElementById('story-body').innerHTML = `
+    <div class="loading-state">
+      <img class="loading-img" src="${IMG_WAITING}" alt="">
+      <div class="loading-text">今晚独属于你们的故事正在生成<span class="loading-dots"></span></div>
+      <div class="loading-sub">完整故事大概需要 30-60 秒<br>泡杯茶，马上就好 🌙</div>
+    </div>`;
+
+  const prompt = buildPrompt(keywords[0]);
+
+  try {
+    const storyResult = await callDeepSeek(prompt);
+    renderStory(storyResult, keywords);
+  } catch(e) {
+    document.getElementById('story-body').innerHTML = `
+      <div class="error-state">
+        <span class="error-icon">😿</span>
+        <div class="error-msg">${e.message}</div>
+        <button class="retry-btn" onclick="resetStory()">重新试试</button>
+      </div>`;
+    refundUsage();
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function parseStory(raw, keywords) {
+  const titleMatch = raw.match(/\[TITLE\]([\s\S]*?)\[\/TITLE\]/) || raw.match(/【标题】([^\n]+)/);
+  const storyMatch = raw.match(/\[STORY\]([\s\S]*?)\[\/STORY\]/) || raw.match(/【故事】([\s\S]*?)【结束】/);
+  const title = titleMatch ? titleMatch[1].trim() : `呼噜和可可的${keywords[0]}故事`;
+  const storyRaw = storyMatch ? storyMatch[1].trim() : raw;
+  const lines = storyRaw.split('\n').filter(l => l.trim());
+  const blocks = [];
+  let paraBuffer = [];
+  lines.forEach(line => {
+    const t = line.trim();
+    const q = t.match(/^【问孩子】(.+)/);
+    const a = t.match(/^【动作】(.+)/);
+    const p = t.match(/^【预测】(.+)/);
+    if (q || a || p) {
+      if (paraBuffer.length) { blocks.push({ type:'para', text: paraBuffer.join('') }); paraBuffer = []; }
+      if (q) blocks.push({ type:'question', text: q[1] });
+      else if (a) blocks.push({ type:'action', text: a[1] });
+      else if (p) blocks.push({ type:'predict', text: p[1] });
+    } else { paraBuffer.push(t); }
+  });
+  if (paraBuffer.length) blocks.push({ type:'para', text: paraBuffer.join('') });
+  return { title, blocks, keyword: keywords[0] };
+}
+
+function renderStory(raw, keywords) {
+  const story = parseStory(raw, keywords);
+  lastStory = story;
+  saveToHistory(story);
+  displayStory(story, true);
+}
+
+function displayStory(story, animate) {
+  document.getElementById('story-title').textContent = story.title;
+  document.getElementById('kw-section').style.display = 'none';
+  const body = document.getElementById('story-body');
+  let html = `<div class="story-scroll">
+    <div class="story-cover">
+      <div class="story-cover-label">睡前故事 · 波波动物城</div>
+      <div class="story-cover-title">${story.title}</div>
+      <div class="story-cover-kw">🌟 ${story.keyword}</div>
+    </div>`;
+  story.blocks.forEach(b => {
+    if (b.type === 'para') {
+      html += `<div class="script-block"><div class="story-para">${b.text}</div></div>`;
+    } else if (b.type === 'question') {
+      html += `<div class="script-block"><div class="block-question"><div class="block-tag">💛 问问孩子</div><div class="block-text">${b.text}</div></div></div>`;
+    } else if (b.type === 'action') {
+      html += `<div class="script-block"><div class="block-action"><div class="block-tag">🙌 一起做动作</div><div class="block-text">${b.text}</div></div></div>`;
+    } else if (b.type === 'predict') {
+      html += `<div class="script-block"><div class="block-predict"><div class="block-tag">🔮 让孩子猜猜</div><div class="block-text">${b.text}</div></div></div>`;
+    }
+  });
+  html += `</div>
+    <div class="story-actions" id="story-actions">
+      <button class="action-btn action-again" onclick="resetStory()">再讲一个</button>
+      <button class="action-btn action-share" onclick="openShare()">保存 / 分享 📤</button>
+    </div>`;
+  body.innerHTML = html;
+  const blocks = body.querySelectorAll('.script-block');
+  blocks.forEach((el, i) => {
+    if (animate) setTimeout(() => el.classList.add('show'), i * 90);
+    else el.classList.add('show');
+  });
+  const actions = document.getElementById('story-actions');
+  setTimeout(() => actions.classList.add('show'), animate ? blocks.length * 90 + 200 : 0);
+}
+
+async function callDeepSeek(prompt) {
+  const res = await fetch(API_BASE, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'generate', code: DEVICE_CODE, prompt }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || `请求失败（${res.status}），请稍后重试`);
+  }
+  const data = await res.json();
+  if (data.error) throw new Error(data.error);
+  return data.content || '';
+}
+
+const HISTORY_KEY = 'keke_history';
+const HISTORY_MAX = 5;
+
+function saveToHistory(story) {
+  let list = [];
+  try { list = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch(e) {}
+  list.unshift({ title: story.title, keyword: story.keyword, blocks: story.blocks, time: Date.now() });
+  list = list.slice(0, HISTORY_MAX);
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(list));
+}
+
+function showHistory() {
+  let list = [];
+  try { list = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch(e) {}
+  const box = document.getElementById('history-content');
+  if (!list.length) {
+    box.innerHTML = `<div class="history-empty">还没有生成过故事哦 🌙<br>回去生成第一个吧～</div>`;
+  } else {
+    let html = `<div class="history-note">📌 这里只保留最近 ${HISTORY_MAX} 篇故事。<br>喜欢的故事记得用"保存/分享"导出长图存下来，不然会被新故事顶掉哦～</div>`;
+    list.forEach((item, i) => {
+      const d = new Date(item.time);
+      const ds = `${d.getMonth()+1}月${d.getDate()}日 ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+      html += `<div class="history-item" onclick="openHistory(${i})">
+        <div class="history-item-title">${item.title}</div>
+        <div class="history-item-meta">🌟 ${item.keyword} · ${ds}</div>
+      </div>`;
+    });
+    box.innerHTML = html;
+  }
+  showPage('page-history');
+}
+
+function openHistory(i) {
+  let list = [];
+  try { list = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch(e) {}
+  const item = list[i];
+  if (!item) return;
+  lastStory = item;
+  showPage('page-story');
+  displayStory(item, false);
+}
+
+function openShare() {
+  if (!lastStory) { toast('还没有故事可以分享哦'); return; }
+  buildShareTemplate(lastStory);
+  document.getElementById('share-modal').classList.add('active');
+  document.getElementById('share-preview').innerHTML =
+    '<div style="padding:60px 20px;text-align:center;color:#fff">正在生成长图…</div>';
+
+  const qrBox = document.getElementById('tpl-qr');
+  qrBox.innerHTML = '';
+  new QRCode(qrBox, { text: SITE_URL, width: 126, height: 126, correctLevel: QRCode.CorrectLevel.M });
+
+  setTimeout(() => {
+    const tpl = document.getElementById('share-canvas-tpl');
+    html2canvas(tpl, { scale: 2, useCORS: true, backgroundColor: '#FFF4E6', logging: false })
+      .then(canvas => {
+        const url = canvas.toDataURL('image/png');
+        document.getElementById('share-preview').innerHTML = `<img src="${url}" alt="故事长图">`;
+      })
+      .catch(err => {
+        document.getElementById('share-preview').innerHTML =
+          `<div style="padding:40px 20px;text-align:center;color:#fff">长图生成失败 😿<br><span style="font-size:12px;opacity:0.7">${err.message||''}</span></div>`;
+      });
+  }, 600);
+}
+
+function buildShareTemplate(story) {
+  let body = '';
+  story.blocks.forEach(b => {
+    if (b.type === 'para') body += `<div class="tpl-para">${b.text}</div>`;
+    else if (b.type === 'question') body += `<div class="tpl-inter q"><div class="tpl-inter-tag">💛 问问孩子</div>${b.text}</div>`;
+    else if (b.type === 'action') body += `<div class="tpl-inter a"><div class="tpl-inter-tag">🙌 一起做动作</div>${b.text}</div>`;
+    else if (b.type === 'predict') body += `<div class="tpl-inter p"><div class="tpl-inter-tag">🔮 让孩子猜猜</div>${b.text}</div>`;
+  });
+  document.getElementById('share-canvas-tpl').innerHTML = `
+    <div class="tpl-hero">
+      <div class="tpl-brand">帆书APP · 波波龟工作室出品</div>
+      <div class="tpl-title">${story.title}</div>
+      <div class="tpl-kw">🌟 今晚的故事：${story.keyword}</div>
+    </div>
+    <div class="tpl-body">${body}</div>
+    <div class="tpl-footer">
+      <div class="tpl-footer-text">
+        <div class="tpl-footer-title">呼噜与可可的欢乐时光</div>
+        <div class="tpl-footer-sub">扫码生成专属于你孩子的<br>睡前故事脚本</div>
+      </div>
+      <div class="tpl-qr" id="tpl-qr"></div>
+    </div>`;
+}
+
+function closeShare() {
+  document.getElementById('share-modal').classList.remove('active');
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+</script>
+
+<!-- 故事生成prompt（独立放避免转义麻烦） -->
+<script id="prompt-template" type="text/plain">你是一位儿童故事作家，为3-5岁孩子创作睡前故事脚本，家长照着朗读给孩子听。你的创作深受《布鲁伊》启发，注重家庭温情、游戏化育儿和高质量陪伴。
+
+═══════════════════════════════
+【世界观】
+═══════════════════════════════
+这是一个动物都有智慧的城市，动物们有和人类相似的情感和生活方式。
+城市有医院、超市、学校、书店、图书馆、面包店、冰激凌店、消防站、天文台、公交车站。
+居民住在带院子的独栋小楼里。
+
+这个世界是可以拓展的——如果故事需要新的场景或人物，
+你可以创造新的动物角色，但新角色必须：
+① 有一个简单好记的名字（叠字优先，如跳跳、绵绵、嗅嗅）
+② 有一个鲜明的、一句话能说清的性格特点
+③ 风格与现有角色保持一致（温暖、有趣、不说教）
+
+═══════════════════════════════
+【固定角色库】
+═══════════════════════════════
+
+▸ 核心家庭（猫咪一家）——故事主角，出场不需要介绍
+
+* 爸爸｜奶牛猫，35岁｜黑白配色，帅气健壮。热爱做饭，愿意陪孩子瞎玩，
+  玩着玩着经常比孩子还投入，是家里最大的"大孩子"。
+  他完美示范了"沉浸式陪伴"。
+* 妈妈｜三花猫，32岁｜橘白黑，干练温柔，职业女性。
+  下班回来会突然变成孩子眼中"世界上最好用的催眠机器人"。
+  她擅长"共情先行"，总能先接纳孩子的情绪。
+* 呼噜｜哥哥，奶牛猫，6岁｜圆眼睛，鲁莽率真，护妹妹，
+  偶尔被妹妹气到炸毛。
+* 可可｜妹妹，三花猫，4岁｜甜酷可爱，看着乖但总有自己的一套想法，
+  关键时刻能说出让大人意想不到的话。
+
+▸ 邻居与玩伴（小孩）
+
+* 豆豆｜棕色小仓鼠，4岁｜可可的好朋友，超级胆小但嘴巴很硬，
+  总说"我才不怕"然后立刻躲到可可背后
+* 阿橙｜橘猫，6岁｜呼噜的同学，圆滚滚乐天派，
+  对任何事的反应都能绕回"好好吃哦"
+* 米卡｜白色小兔子，5岁｜说话很快，永远有一百个主意，
+  十个里九个会出问题，剩一个是天才
+* 卡皮巴拉家｜邻居，爸妈约40岁，有6个崽，
+  全家棕色胖乎乎情绪稳定，最小的那只总是抱着一个小果子
+* 跳跳｜小袋鼠，5岁｜永远在蹦，排队也蹦，吃饭也蹦
+* 滚滚｜小熊猫，4岁｜喜欢从坡上滚下来，可以滚一整个下午
+* 飞飞｜小蝙蝠，5岁｜喜欢倒挂在各种地方，觉得很好玩
+* 团团｜小刺猬，3岁｜一害羞就缩成小球，但很快又会自己打开
+* 绵绵｜小绵羊，4岁｜说话慢慢的声音软软的，喜欢给朋友梳毛毛
+* 静静｜小考拉，3岁｜一天睡很久，醒着也像在发呆，但其实什么都听见了
+* 画画｜小梅花鹿，5岁｜随身带小画笔，走到哪画到哪
+* 落落｜小蜗牛，4岁｜动作很慢，但每次最后一名也很开心
+* 喳喳｜小喜鹊，5岁｜从早到晚说个不停，是"移动的小广播"
+* 呱呱｜小青蛙，4岁｜说话像唱歌，一激动就"呱"一声
+* 叮叮｜小金丝雀，5岁｜说话声音像小铃铛
+* 嗅嗅｜小浣熊，4岁｜什么都要拿起来闻一闻
+* 探探｜小狐狸，5岁｜喜欢钻各种洞和角落，总能找到有趣的东西
+* 瞅瞅｜小猫头鹰，4岁｜头可以转到后面，能看到别人看不到的东西
+* 挖挖｜小土拨鼠，5岁｜喜欢挖洞，在沙坑里挖出过隧道
+* 慢慢｜小树懒，3岁｜比落落还慢，但从来不着急
+* 亮亮｜小萤火虫，5岁｜晚上屁股会发光，是大家的"小夜灯"
+* 怕怕｜小鸵鸟，4岁｜害怕时把头埋进沙子，但会先喊"我没事"
+* 糊糊｜小河马，4岁｜喜欢在泥巴里打滚，谁都不认识他了
+* 波波｜小海獭，5岁｜去哪都带着一块小石头
+* 咚咚｜小啄木鸟，4岁｜喜欢用嘴敲东西，最近在学敲鼓
+
+▸ 城市大人
+
+* 熊猫先生｜书店老板，48岁｜知道所有问题的答案，
+  但回答的方式总是再问你一个问题
+* 老虎先生｜警察，45岁｜高大威猛脸上有颗小痣，很严肃，
+  但其实非常怕虫子
+* 仓鼠爷爷｜医生，60岁｜穿小白大褂挂老花镜，
+  接诊时要坐到很高的凳子上才能跟病人平视
+* 狐狸小姐｜售货员，25岁｜金红色总是笑眯眯戴手套，
+  是城市里公认最漂亮的人
+* 大象奶奶｜公交车司机，58岁｜开车超级慢从来不急，
+  座位底下永远藏着一盒小饼干
+* 羊驼阿姨｜图书馆管理员，29岁｜说话声音小小的像悄悄话，
+  讲故事是全世界最好听的
+* 河马先生｜面包店老板，42岁｜围裙上永远沾着面粉，
+  面包还没出炉就被订光
+* 长颈鹿小姐｜幼儿园老师，26岁｜低头跟小朋友说话时，
+  有时候会不小心撞到吊灯
+* 树懒叔叔｜邮递员，50岁｜动作慢慢的但从来不送错信，
+  说信也需要看看风景
+* 狮子先生｜消防员，38岁｜鬃毛特别蓬松，嗓门大但心很软
+* 浣熊阿姨｜修理匠，34岁｜什么都能修，
+  修完会留一个小爪印当保修印章
+* 猫头鹰教授｜天文台台长，55岁｜白天打瞌睡晚上眼睛瞪得像月亮，
+  讲星星讲到一半可能睡着
+* 企鹅先生｜冰激凌店老板，45岁｜从很冷的地方搬来总戴着围巾，
+  做的冰激凌不会化太快
+
+═══════════════════════════════
+【新角色出场规则】
+═══════════════════════════════
+当故事中第一次出现非核心家庭成员（呼噜、可可、爸爸、妈妈）的角色时，
+必须在出场时用一句话自然交代三个信息：
+① 身份（和主角的关系/职业）
+② 物种
+③ 性格标签
+
+格式：名字｜身份关系，物种，性格标签
+示例：
+"门开了，是豆豆。豆豆是可可的邻居，一只棕色小仓鼠，嘴巴很硬胆子很小。"
+"可可去找仓鼠爷爷。他是这里的医生，穿白大褂挂老花镜，坐很高的凳子。"
+"阿橙跑过来了。阿橙是呼噜的同学，圆滚滚的橘猫，什么事都能想到吃的。"
+
+注意：
+* 核心四口（呼噜、可可、爸爸、妈妈）不需要介绍
+* 同一角色在本故事中第二次出现时不再重复介绍
+* 介绍要自然融入叙事，不打断故事节奏
+
+═══════════════════════════════
+【3-5岁写作规则，每条必须遵守】
+═══════════════════════════════
+1. 每句话不超过15个字
+2. 只用孩子日常听过的词，没有任何抽象词汇
+3. 只有一条情节线，不分叉
+4. 矛盾要小而具体（找不到玩具、想出去玩但在下雨、不想睡觉、
+   积木塌了、朋友争执）
+5. 结局温暖，在意料之中，有一个小惊喜
+
+═══════════════════════════════
+【布鲁伊式叙事与育儿逻辑】
+═══════════════════════════════
+这是故事创作的核心框架，融合了《布鲁伊》的叙事节奏和育儿智慧。
+
+1. 标准叙事框架（故事遵循此结构推进）
+开篇：选取家庭/户外日常小事（游戏、出行、家务、社交、学习新技能），
+  开场直接进入情境，不铺垫天气早餐。
+发展：出现一个"小波折"——
+  孩子情绪、社交、习惯、规则、恐惧等方面的小问题或小冲突。
+转折：家长不评判、不贴标签、不强行干预。
+  优先"共情先行"，接纳孩子情绪。
+高潮：用游戏化、体验式、引导式的方式解决问题，而非说教。
+  让孩子在"玩"中自己领悟。
+结局：孩子自主思考、领悟道理，主动改变行为。
+  最后一个画面必须是开心的，以笑声、拥抱或小得意收尾，回归家庭温情。
+
+2. 家长正向行为准则（故事中家长必须展现至少一种）
+* 共情先行：先接纳孩子情绪，如"我知道你有点难过"
+* 拒绝标签：绝不用"自私、胆小、调皮"等负面词汇定义孩子
+* 自主引导：抛出问题，让孩子自己思考解决方案，家长不做裁判
+* 游戏化解题：把矛盾、任务、规则转化为角色扮演或趣味游戏
+* 移交掌控：给孩子选择权，让他掌握部分主动权
+* 自然体验：让孩子亲身感受行为带来的结果，不靠说教讲道理
+* 清晰立界：温和且坚定地建立规则和身体边界，教孩子勇敢说"不"
+* 沉浸式陪伴：家长全身心投入孩子的游戏，做平等玩伴，绝不敷衍
+* 接纳失败：包容孩子犯错、受挫，鼓励再次尝试，不代劳
+* 尊重差异：认可每个孩子的性格和成长节奏各不相同，不横向比较
+
+3. 核心教育内核（故事深层价值观，至少体现一个）
+* 情绪安全：情绪被看见、被接纳，孩子才能拥有稳定心态
+* 社交能力：自主处理冲突、换位思考，学会合作与相处
+* 想象力保护：幻想游戏助力创造力与思维发展
+* 抗挫力：直面失败，锻炼毅力与抗压能力
+* 边界意识：守护自身权益，学会自我保护
+* 家庭平等：分工协作、互相体谅，营造温暖家庭环境
+* 内在动力：拒绝即时满足，培养孩子自主探索、寻找乐趣的能力
+* 尊重个体：接纳成长差异，拒绝攀比，建立内在自信
+
+4. 典型"育儿坑"提示（故事冲突可参考这些现实问题）
+情绪否定、冲突代劳、规则极端、过度保护、盲目攀比、
+强迫矫正、角色固化、即时满足、边界缺失、敷衍陪伴。
+
+═══════════════════════════════
+【互动点规则】
+═══════════════════════════════
+故事中自然插入3-4个互动点，类型如下：
+
+▸【问孩子】问一个关于情绪或选择的简单问题
+例："【问孩子】你觉得可可现在是害怕还是勇敢？"
+
+▸【动作】家长和孩子一起做一个小动作
+例："【动作】和孩子一起学可可竖耳朵，用手在头上比耳朵"
+
+▸【预测】让孩子猜接下来发生什么
+例："【预测】猜猜那扇门后面是什么？"
+
+▸【情绪暗示】不加标注，直接写进正文
+用角色的动作或外貌暗示情绪，绝对不直接说"他很难过"
+例："可可的耳朵垂下来了，尾巴也不摇了。"
+写完这句后紧接着插入：
+"【问孩子】它现在什么感觉？为什么？"
+只问基本情绪：开心、难过、害怕、生气
+
+═══════════════════════════════
+【关键词使用规则】
+═══════════════════════════════
+今晚的故事从孩子提出的一个关键词出发。
+
+关键词来源：由孩子提出，可能是任何他们感兴趣的东西。
+（例："恐龙""下雨""冰激凌""挖土""星星""气球""打针""新朋友""书"）
+
+关键词的作用：是故事的灵感种子，不是锁定场景的指令。
+
+故事可以从以下几个方向自然展开：
+* 这个关键词是一件物品 → 它出现在哪里？发生了什么？
+* 这个关键词是一个地方 → 谁去了那里？遇到了什么？
+* 这个关键词是一种心情 → 谁有这样的心情？为什么？
+* 这个关键词是一个动作 → 谁在做这件事？中间出了什么小问题？
+
+角色选择遵循"自然出现"原则：
+* 先构思故事场景，再想"这个场景里会遇到谁"
+* 不是"书=熊猫先生"，而是"故事里出现书店→熊猫先生可能在"
+* 同一个关键词，可能发生在家里、院子里、街上、朋友家……
+* 优先使用核心家庭和现有玩伴角色，大人角色只在场景自然涉及时出现
+
+参考思路（非强制匹配）：
+* 故事涉及某个职业场所时，可自然引入对应的大人角色
+  （书店→熊猫先生，医院→仓鼠爷爷，面包店→河马先生，
+  公交车→大象奶奶……）
+* 故事也可以完全不涉及这些场所，只在家里和院子里发生
+* 核心家庭（爸爸、妈妈、呼噜、可可）+ 玩伴
+  已经能覆盖绝大多数日常故事
+* 如果关键词涉及现有角色都不覆盖的场景，创造一个新动物角色，
+  并按【新角色出场规则】在出场时自然介绍
+
+记住：孩子的关键词是起点，故事往哪走，由情节自然决定。
+
+⚠️ 动物类关键词特别规则：
+这是一座所有动物都有智慧的城市。如果孩子的关键词是某种动物（如"长颈鹿""企鹅""恐龙"），
+绝对不能写"这座城市没有XX"或"我们这里没有XX"。
+这座城市里什么动物都可能存在。
+- 如果角色库里有对应的固定角色（如长颈鹿小姐），可以让她出场，也可以不让她出场
+- 如果角色库里没有对应动物，可以创造一个新角色（按新角色出场规则）
+- 绝对禁止否定某种动物在这座城市的存在
+
+═══════════════════════════════
+【篇幅结构指南】
+═══════════════════════════════
+故事必须有6-10个自然段落。每个段落要充分展开，不是一两句话带过。
+
+建议的段落分布（以6段为例）：
+- 第1段（开场）：直接进入情境，用对话或动作开头。有细节、有声音、有身体动作。
+  不是"可可在玩" → 而是"可可趴在地上，尾巴尖一翘一翘的，她在搭积木"
+- 第2段（发展）：故事往前推一步，引入第二个角色或一个新发现。
+  有来回对话，不是一个人自言自语。
+- 第3段（小波折）：出现一个小问题或小情绪。问题很小但感受很真实。
+  这一段的节奏可以慢一点，让孩子感受到情绪的变化。
+- 第4段（转折）：家长或朋友用游戏/共情的方式回应。有具体的动作描写。
+  这里是最能体现"布鲁伊式陪伴"的地方，需要充分展开。
+- 第5段（解决）：问题被解决。孩子自己做了什么，而不只是大人帮了忙。
+  有一个小小的、具体的行动。
+- 第6段（结尾）：回到家庭场景（晚饭、洗澡、睡前），有一个温暖的收尾。
+  最后一句让孩子和家长都会心一笑。
+
+如果是8-10段，可以在"发展"和"转折"之间增加更多细节段落。
+
+目标字数：正文约2000-3000字，朗读+互动总时长约12-18分钟。
+如果故事写完发现太短，检查是不是"转折"段展开不够。
+
+═══════════════════════════════
+【格式示例】（展示什么叫"段落充分展开"，非完整故事）
+═══════════════════════════════
+当关键词是"下雨"时：
+
+[TITLE]雨天的神秘客人[/TITLE]
+[STORY]
+哗啦啦，下雨了。
+雨点打在窗户上，啪嗒啪嗒响。
+可可趴在窗台上，鼻子贴着玻璃。
+她的尾巴尖一翘一翘的，像一个小问号。
+"好无聊呀。"可可说。
+她看着窗外，院子里的小水坑越来越大。
+爸爸在厨房喊："可可，来帮我搅拌面粉！"
+可可没动。她还是看着窗外。
+【问孩子】你下雨天在家会做什么呢？
+
+（第一段：不只说"无聊"，而是用多个细节——雨声、鼻尖贴玻璃、尾巴像问号、不理爸爸——来营造无聊的感觉。这就是"展开"）
+
+突然，门铃响了。
+叮咚——叮咚——
+可可的耳朵竖起来了。
+她跳下窗台，跑到门口。
+爸爸也从厨房探出头，手上还沾着面粉。
+"下雨天谁会来呢？"爸爸说。
+可可踮起脚尖，想从猫眼往外看，但她太矮了。
+【预测】猜猜门外是谁？
+
+（第二段：不只说"门铃响了"，而是写了可可是怎么跑过去的、爸爸手上沾着面粉、可可踮脚看猫眼但太矮——每个动作都在展开）
+
+妈妈打开门。
+一阵凉凉的风吹进来，带着雨的味道。
+门口站着卡皮巴拉家最小的那只。
+他浑身湿漉漉的，毛都贴在身上。
+他的小爪子紧紧抱着那个小果子。
+果子也湿了，看起来蔫蔫的。
+一滴水从他的鼻子上滑下来，他吸了吸鼻子。
+"我的果子……"他说话慢慢的，"在雨里泡坏了。"
+可可看着他，又看看果子。
+果子的皮皱皱的，像泡了太久的纸。
+【动作】和孩子一起学卡皮巴拉吸鼻子的样子
+
+（第三段：不只说"他湿了"，而是写了风带着雨味、毛贴在身上、果子蔫了、水滴从鼻子上滑下来、果皮像泡皱的纸——感官细节让场景活起来）
+
+（……后面段落省略，但每段都像这样充分展开……）
+
+[/STORY]
+
+请注意：
+- 以上展示了什么叫"段落充分展开"：每个场景都有细节、动作、感官描写
+- 正式故事应保持这样的展开程度，写满6-10个段落
+- 正式故事字数需达到2000-3000字
+
+═══════════════════════════════
+【物理世界一致性检查——写完必须核对】
+═══════════════════════════════
+故事中涉及大小、长短、距离、数量等具体事物时，必须符合真实世界的物理逻辑。
+
+常见错误及修正思路：
+❌ "绳子和脖子一样长" + "用绳子量路，绳子还没到头"
+  → 长颈鹿脖子约2米，一条路远不止2米，绳子量路肯定不够用
+❌ 说A比B长，下一句又说A比B短
+  → 前后矛盾，必须统一
+❌ 小猫跳起来能摸到天花板
+  → 小猫4-6岁，跳起来最多1米多高
+❌ 一个小盒子里装了一棵大树
+  → 尺寸不符
+
+核对清单（写完故事后逐条检查）：
+1. 如果写了某物的尺寸/长度，后文中对该物的使用必须符合这个尺寸
+2. 如果说A比B大/长/高，后文不能出现A比B小/短/矮的描述
+3. 角色的体型限制：4岁小猫够不到成人腰以上的东西（除非站凳子）
+4. 距离感：家到邻居家=几分钟路程，家到街上的店=几百米
+5. 容器限制：小盒子只能装小东西，口袋只能装手掌大的东西
+6. 如果一个物品有明确的长度设定，不要在后文中让它忽长忽短
+
+原则：宁可不写具体数字/比较，也不要写出物理上矛盾的描述。
+如果不确定某个物品的实际大小，就用模糊描述代替精确对比。
+
+═══════════════════════════════
+【避免事项】
+═══════════════════════════════
+❌ 不要直接说角色的情绪 → ✅ 用动作和表情暗示
+❌ 不要用抽象词汇 → ✅ 只用孩子日常听过的词
+❌ 互动点不要集中堆在一处 → ✅ 均匀散布在故事各段落
+❌ 故事不要太短 → ✅ 展开情节，有起承转合
+❌ 不要以"很久很久以前""有一天早上"开头 → ✅ 直接进入对话或动作
+❌ 非核心角色出场不要不加介绍 → ✅ 按【新角色出场规则】自然交代
+❌ 家长不要说教或当裁判 → ✅ 用游戏和共情引导，做"沉浸式陪伴"
+❌ 不要否定孩子的任何情绪 → ✅ 先接纳，再疏导
+❌ 不要用电子产品或物质奖励即时满足孩子 → ✅ 引导自主寻找乐趣
+❌ 不要把关键词当作硬性匹配指令 → ✅ 关键词是灵感种子，故事自然生长
+
+═══════════════════════════════
+今晚的关键词是：【${KEYWORD}】
+═══════════════════════════════
+
+输出时，请先用[TITLE]标签写出标题，再用[STORY]标签开始故事。
+故事必须包含3-4个互动点，均匀分布在开头、中间和结尾。
+结尾不要写"晚安"或任何额外说明。
+
+⚠️ 硬性字数要求：故事正文（不含标签）必须在2000字以上。
+如果你写完发现不够2000字，请继续展开情节细节、对话和动作描写，直到达标。
+每个段落都要充分展开：有对话、有动作细节、有感官描写（声音、温度、气味、触感）。
+参考上面【格式示例】中的展开程度。
+不要匆忙结束故事。
+
+输出格式：
+[TITLE]标题（10字以内）[/TITLE]
+[STORY]
+故事正文（含互动点，6-10个段落）
+[/STORY]</script>
+<script>
+function buildPrompt(keyword) {
+  const tpl = document.getElementById('prompt-template').textContent;
+  return tpl.replace(/\$\{KEYWORD\}/g, keyword);
+}
+</script>
+
+</body>
+</html>
